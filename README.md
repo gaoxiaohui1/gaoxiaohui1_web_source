@@ -1,6 +1,6 @@
 # gaoxiaohui1_web_source
 
-> A Vue.js project
+> A Vue.js project. source code for https://gaoxiaohui1.github.io
 
 ## Build Setup
 
