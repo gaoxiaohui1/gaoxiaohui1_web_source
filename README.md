@@ -2,6 +2,20 @@
 
 > A Vue.js project. source code for https://gaoxiaohui1.github.io
 
+## cms proj
+
+``` bash
+# 数据存储
+暂时使用Local Storage
+
+# /cms/fp/~
+cms网站前台页面（无需登陆）
+
+# /cms/bp/~
+cms网站后台页面（需登录）
+
+```
+
 ## Build Setup
 
 ``` bash
