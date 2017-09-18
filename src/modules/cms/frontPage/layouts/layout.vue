@@ -1,11 +1,11 @@
 <template>
-  <div class="app-wrapper">
-    <nav></nav>
+  <div class="layout">
+    <nav-bar></nav-bar>
     <app-main></app-main>
   </div>
 </template>
 <script>
-import nav from './nav'
+import navBar from './nav'
 import appMain from './appMain'
 export default {
   name: 'Layout',
@@ -15,7 +15,7 @@ export default {
     }
   },
   components: {
-    nav,
+    navBar,
     appMain
   }
 }

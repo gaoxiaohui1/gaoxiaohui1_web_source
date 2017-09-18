@@ -4,12 +4,9 @@
  Vue.use(Router)
  const routes = []
 
-
-
- //错误页面路由
+ // 错误页面路由
  import errorPage from '@/errorPage/route.js'
  Array.prototype.push.apply(routes, errorPage)
-
 
  // CMS模板前台路由
  import cmsFPRoutes from '@/modules/cms/frontPage/route.js'
@@ -25,4 +22,4 @@
      y: 0
    }),
    routes
- });
+ })
