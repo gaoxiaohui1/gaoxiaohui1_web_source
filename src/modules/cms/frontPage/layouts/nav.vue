@@ -20,15 +20,12 @@ export default {
   name: 'nav',
   data() {
     return {
-      activeIndex: 1,
+      activeIndex: '1',
       logoUrl: logo
     }
   },
   methods: {
     handleSelect: function(key, keyPath) {
-      console.log(key)
-      console.log(keyPath)
-      console.log(this.$route)
       document.title = this.$route.name
     }
   }
