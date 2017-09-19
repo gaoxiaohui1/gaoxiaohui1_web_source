@@ -1,8 +1,8 @@
-import layout from './layout/layout'
-import home from './home/index'
-import list from './news/list'
-import detail from './news/detail'
-import about from './about/index'
+import layout from './layouts/layout.vue'
+import home from './home/index.vue'
+import list from './news/list.vue'
+import detail from './news/detail.vue'
+import about from './about/index.vue'
 
 export default [{
   path: '/cms/fp/home',
