@@ -36,5 +36,41 @@ export default {
         }
       }
     })
+  },
+  getNewsAuthors() {
+    Mock.mock(/\/getNewsAuthors/, 'get', {
+      IsSuccess: true,
+      Msg: '',
+      Value: {
+        'data|7': [{
+          'ID|+1': 1,
+          'author': '@cname'
+        }]
+      }
+    })
+  },
+  getNewsPublishUsers() {
+    Mock.mock(/\/getNewsPublishUsers/, 'get', {
+      IsSuccess: true,
+      Msg: '',
+      Value: {
+        'data|7': [{
+          'ID|+1': 1,
+          'publishUser': '@cname'
+        }]
+      }
+    })
+  },
+  getNewsTitles() {
+    Mock.mock(/\/getNewsTitles/, 'get', {
+      IsSuccess: true,
+      Msg: '',
+      Value: {
+        'data|7': [{
+          'ID|+1': 1,
+          'title': '@ctitle'
+        }]
+      }
+    })
   }
 }

@@ -17,5 +17,26 @@ export default {
       params: searchInfo,
       method: 'get'
     })
+  },
+  getNewsAuthors() {
+    return fetch({ // 获取新闻作者列表
+      url: 'http://getNewsAuthors',
+      params: { v: new Date() },
+      method: 'get'
+    })
+  },
+  getNewsPublishUsers() {
+    return fetch({ // 获取新闻发布者列表
+      url: 'http://getNewsPublishUsers',
+      params: { v: new Date() },
+      method: 'get'
+    })
+  },
+  getNewsTitles() {
+    return fetch({ // 获取新闻标题列表
+      url: 'http://getNewsTitles',
+      params: { v: new Date() },
+      method: 'get'
+    })
   }
 }

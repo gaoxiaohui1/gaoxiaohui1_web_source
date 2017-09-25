@@ -8,6 +8,9 @@
         <el-form-item label="作者">
           <el-input v-model="searchData.author" placeholder="作者"></el-input>
         </el-form-item>
+        <el-form-item label="发布人">
+          <el-input v-model="searchData.publishUser" placeholder="发布人"></el-input>
+        </el-form-item>
         <el-form-item label="类型">
           <el-select v-model="searchData.type" placeholder="类型" style="width:130px;">
             <el-option v-for="item in types" :label="item.label" :value="item.value" :key="item.value">
@@ -64,6 +67,7 @@ export default {
       searchData: {
         ID: '', // 编号
         author: '', // 作者
+        publishUser: '', // 发布人
         type: '', // 类型
         startTime: '', // 开始时间
         endTime: '', // 结束时间
@@ -109,6 +113,10 @@ export default {
   created() {
     this.types.push({ value: 0, label: '类型' })
     this.types.push(...cmsApi.getNewsTye())
+    this.searchData.ID = this.$route.query.ID
+    this.searchData.author = this.$route.query.author
+    this.searchData.publishUser = this.$route.query.publishUser
+    this.searchData.type = this.$route.query.type
     this.getTableData()
   },
   components: {
