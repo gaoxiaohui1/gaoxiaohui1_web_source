@@ -12,9 +12,9 @@
  import cmsFPRoutes from '@/modules/cms/frontPage/route.js'
  Array.prototype.push.apply(routes, cmsFPRoutes)
 
- /* // CMS模板后台路由
+ // CMS模板后台路由
  import cmsBPRoutes from '@/modules/cms/backPage/route.js'
- Array.prototype.push.apply(routes, cmsBPRoutes) */
+ Array.prototype.push.apply(routes, cmsBPRoutes)
 
  export default new Router({
    // mode: 'history', //后端支持可开

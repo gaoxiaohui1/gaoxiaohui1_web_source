@@ -4,6 +4,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import Mock from './mock/mock'
+import './permission'
 
 Vue.use(ElementUI)
 Vue.use(Mock)
