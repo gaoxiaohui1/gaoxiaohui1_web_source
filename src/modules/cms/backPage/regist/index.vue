@@ -19,7 +19,8 @@
                 <el-input v-model="registData.nickName"></el-input>
               </el-form-item>
               <el-form-item label="密码" prop="passWord">
-                <el-input v-model="registData.passWord"></el-input>
+                <el-input v-model="registData.passWord" :type="registData.pwType"></el-input>
+                <el-button @click="showPW()">{{registData.pwDes}}</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click="doRegist()">注册</el-button>
@@ -43,7 +44,9 @@ export default {
       registData: {
         userName: '',
         nickName: '',
-        passWord: ''
+        passWord: '',
+        pwType: 'password',
+        pwDes: '显示密码'
       },
       rules: {
         userName: [
@@ -63,14 +66,25 @@ export default {
   },
   methods: {
     /**
+     * 密码显示隐藏
+     */
+    showPW() {
+      if (this.loginData.pwType === 'password') {
+        this.loginData.pwType = ''
+        this.loginData.pwDes = '隐藏密码'
+      } else {
+        this.loginData.pwType = 'password'
+        this.loginData.pwDes = '显示密码'
+      }
+    },
+    /**
      * 校验用户名
      */
     doValidateUserName() {
-      debugger
       this.$refs.form.validateField('userName', error => {
         if (error === '') {
           const validateRes = cmsApi.validateRegistName(this.registData.userName)
-          if (validateRes.Data) {
+          if (validateRes.IsSuccess || validateRes.Data) {
             Message({
               message: validateRes.Msg,
               type: 'error',
@@ -89,9 +103,24 @@ export default {
           const registRes = cmsApi.regist(this.registData)
           Message({
             message: registRes.Msg,
-            type: registRes.Data ? 'success' : 'error',
-            duration: 5 * 1000
+            type: registRes.IsSuccess ? 'success' : 'error'
           })
+          if (registRes.IsSuccess) {
+            this.$store.dispatch('LoginCMS', this.registData).then(response => {
+              Message({
+                message: '自动登陆成功',
+                type: 'success'
+              })
+              this.$router.push({ path: '/cms/bp/news' })
+            }).catch(error => {
+              Message({
+                message: '自动登陆失败',
+                type: 'error'
+              })
+              console.log(error)
+              this.$router.push({ path: '/cms/bp/login' })
+            })
+          }
         }
       })
     },

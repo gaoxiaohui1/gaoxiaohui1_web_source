@@ -6,13 +6,18 @@ export default {
    * @param {*用户名} userName
    */
   validateRegistName(userName) {
-    const sourceIDStr = window.localStorage.getItem('cms_user_ids')
-    if (sourceIDStr === null || sourceIDStr === '') {
-      return { Data: false, Msg: '' }
-    } else {
-      const userNames = JSON.parse(sourceIDStr)
-      const isExist = userNames.findIndex(x => x.userName === userName && x.userStatus === 0) > -1
-      return { Data: isExist, Msg: isExist ? '用户名已存在' : '' }
+    try {
+      const sourceIDStr = window.localStorage.getItem('cms_user_ids')
+      if (sourceIDStr === null || sourceIDStr === '') {
+        return { IsSuccess: true, Data: false, Msg: '' }
+      } else {
+        const userNames = JSON.parse(sourceIDStr)
+        const isExist = userNames.findIndex(x => x.userName === userName.trim() && x.userStatus === 0) > -1
+        return { IsSuccess: true, Data: isExist, Msg: isExist ? '用户名已存在' : '' }
+      }
+    } catch (e) {
+      console.log('validateRegistName_error:', e)
+      return { IsSuccess: false, Msg: '校验失败' }
     }
   },
   /**
@@ -23,16 +28,16 @@ export default {
     try {
       const operateTime = dateFormate.dateFormate(new Date(), 'yyyy-MM-dd hh:mm:ss')
       const sourceIDStr = window.localStorage.getItem('cms_user_ids')
-      const user_id = { ID: 0, userName: info.userName, userStatus: 0 }
-      const user_i = { ID: 0, userName: info.userName, passWord: info.passWord, nickName: info.nickName, userStatus: 0, insertTime: operateTime }
+      const user_id = { ID: 0, userName: info.userName.trim(), userStatus: 0 }
+      const user_i = { ID: 0, userName: info.userName.trim(), passWord: info.passWord.trim(), nickName: info.nickName.trim(), userStatus: 0, insertTime: operateTime }
       if (sourceIDStr === null || sourceIDStr === '') {
         window.localStorage.setItem('cms_user_ids', JSON.stringify([user_id]))
         window.localStorage.setItem('cms_user_0', JSON.stringify(user_i))
-        return { Data: true, Msg: '注册成功' }
+        return { IsSuccess: true, Msg: '注册成功' }
       } else {
         const userIDs = JSON.parse(sourceIDStr)
-        if (userIDs.findIndex(x => x.userName === info.userName && x.userStatus === 0) > -1) {
-          return { Data: false, Msg: '注册失败：用户名已存在' }
+        if (userIDs.findIndex(x => x.userName === info.userName.trim() && x.userStatus === 0) > -1) {
+          return { IsSuccess: false, Msg: '注册失败：用户名已存在' }
         }
         const index = userIDs.length
         user_id.ID = index
@@ -40,11 +45,11 @@ export default {
         userIDs.push(user_id)
         window.localStorage.setItem('cms_user_ids', JSON.stringify(userIDs))
         window.localStorage.setItem('cms_user_' + index, JSON.stringify(user_i))
-        return { Data: true, Msg: '注册成功' }
+        return { IsSuccess: true, Msg: '注册成功' }
       }
     } catch (e) {
       console.log('regist_error:', e)
-      return { Data: false, Msg: '注册失败' }
+      return { IsSuccess: false, Msg: '注册失败' }
     }
   },
   /**
@@ -55,22 +60,55 @@ export default {
     try {
       const sourceIDStr = window.localStorage.getItem('cms_user_ids')
       if (sourceIDStr === null || sourceIDStr === '') {
-        return { Data: false, Msg: '登陆失败：账号不存在' }
+        return { IsSuccess: false, Msg: '登陆失败：账号不存在' }
       }
       const userIDs = JSON.parse(sourceIDStr)
-      const matchUserID = userIDs.find(x => x.userName === info.userName && x.userStatus === 0)
+      const matchUserID = userIDs.find(x => x.userName === info.userName.trim() && x.userStatus === 0)
       if (matchUserID === undefined) {
-        return { Data: false, Msg: '登陆失败：账号不存在' }
+        return { IsSuccess: false, Msg: '登陆失败：账号不存在' }
       }
       const userInfoStr = window.localStorage.getItem('cms_user_' + matchUserID.ID)
       const userInfo = JSON.parse(userInfoStr)
-      if (userInfo.passWord === info.passWord) {
-        return { Data: true, Msg: '登陆成功' }
+      if (userInfo.passWord === info.passWord.trim()) {
+        return { IsSuccess: true, Msg: '登陆成功', Data: 'cms_user_' + matchUserID.ID }
       }
-      return { Data: false, Msg: '登陆失败：密码错误' }
+      return { IsSuccess: false, Msg: '登陆失败：密码错误' }
     } catch (e) {
       console.log('login_error:', e)
-      return { Data: false, Msg: '登陆失败' }
+      return { IsSuccess: false, Msg: '登陆失败' }
     }
+  },
+  /**
+   * 根据token获取用户信息
+   * @param {*} token
+   */
+  getUserInfoByToken(token) {
+    try {
+      const userInfoStr = window.localStorage.getItem(token)
+      if (userInfoStr === null || userInfoStr === '') {
+        return { IsSuccess: false, Msg: 'token错误' }
+      }
+      return { IsSuccess: true, Msg: '获取用户信息成功', Data: JSON.parse(userInfoStr) }
+    } catch (e) {
+      console.log('login_error:', e)
+      return { IsSuccess: false, Msg: '登陆失败' }
+    }
+  },
+  getNewsTye() { // 获取新闻类型
+    return [{ value: 10, label: '财经' }, { value: 20, label: '娱乐' }, { value: 30, label: '体育' }, { value: 40, label: '汽车' }, { value: 50, label: '房产' }]
+  },
+  getNewsList(searchInfo) {
+    return fetch({ // 获取新闻列表
+      url: 'http://getNewsList',
+      params: searchInfo,
+      method: 'get'
+    })
+  },
+  getNewsDetail(searchInfo) {
+    return fetch({ // 获取新闻明细
+      url: 'http://getNewsDetail',
+      params: searchInfo,
+      method: 'get'
+    })
   }
 }
