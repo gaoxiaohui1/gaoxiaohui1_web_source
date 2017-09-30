@@ -13,7 +13,7 @@ router.beforeEach((to, from, next) => {
         next()
       } else {
         if (auth.getCMSToken()) { // 是否登陆
-          if (store.getters.cmsUser === {}) { // 当前登陆人信息
+          if (store.getters.cmsUser.ID === -1) { // 当前登陆人信息
             store.dispatch('GetUserInfoCMS').then(r => { // 获取当前登陆人信息
               next()
             }).catch(e => {

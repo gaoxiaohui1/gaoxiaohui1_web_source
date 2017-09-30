@@ -3,7 +3,7 @@ import cmsAPI from '@/modules/cms/backPage/api'
 
 const user = {
   state: {
-    currentUser: {}, // 当前登陆人信息
+    currentUser: { ID: -1 }, // 当前登陆人信息
     token: auth.getCMSToken() // token
   },
   mutations: {
@@ -61,7 +61,7 @@ const user = {
             commit('SET_USER', userInfoRes.Data)
             resolve()
           } else {
-            commit('SET_USER', {})
+            commit('SET_USER', { ID: -1 })
             reject(userInfoRes)
           }
         } catch (e) {
