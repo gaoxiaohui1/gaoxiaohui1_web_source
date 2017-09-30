@@ -17,14 +17,26 @@ key=cms_user_0 value={a:0,b:'asd',c:'123',d:'dsa',e:0}
 # newsinfo(newsid,newsstatus(0-草稿;1-发布;9-删除))获取newsid
 key=cms_news_ids value=[{a:0,b:0},{a:1,b:1},{a:2,b:9}]
 
-# newsinfo(id,title,type,author,publishTime,publishUser,readCount,publishUserID,inserttime,updateTime)
+# newsinfo(id,title,content,type,author,publishTime,publishUser,readCount,publishUserID,inserttime,updateTime)
 key=cms_news_0 value={a:0,b:'asd',c:0,d:'g',e:'2017-7-7',f:'asd',f:1,f:0,f:'2017-7-7',f:'2017-7-7'}
 
-# 数据返回格式
-{ IsSuccess: true, Msg: '', Value: { data: 123 } }
+# newsinfo(type)获取类型列表
+key=cms_news_type value=['财经','体育']
+
+# newsinfo(author)获取作者列表
+key=cms_news_author value=['张三','李四']
+
+# newsinfo(publishUser)获取发布人列表
+key=cms_news_publishUser value=[{ID:0,name:'张三'}]
+
+# newsinfo(ID,title)获取标题列表
+key=cms_news_title value=[{ID:0,title:'asd'}]
 
 # 数据返回格式
-{ IsSuccess: true, Msg: '', Value: { data: [{a:1,b:''}],totalCount:12 } }
+{ IsSuccess: true, Msg: '', Data: [1,2] }
+
+# 数据返回格式
+{ IsSuccess: true, Msg: '', Data: { data: [{a:1,b:''}],totalCount:12 } }
 
 # /cms/fp/~
 cms网站前台页面（无需登陆）

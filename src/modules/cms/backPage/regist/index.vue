@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import cmsApi from '../api'
+import cmsAPI from '@/modules/cms/api/userAPI'
 import { Message } from 'element-ui'
 export default {
   name: 'regist',
@@ -83,7 +83,7 @@ export default {
     doValidateUserName() {
       this.$refs.form.validateField('userName', error => {
         if (error === '') {
-          const validateRes = cmsApi.validateRegistName(this.registData.userName)
+          const validateRes = cmsAPI.validateRegistName(this.registData.userName)
           if (validateRes.IsSuccess || validateRes.Data) {
             Message({
               message: validateRes.Msg,
@@ -100,7 +100,7 @@ export default {
     doRegist() {
       this.$refs.form.validate((valide) => {
         if (valide) {
-          const registRes = cmsApi.regist(this.registData)
+          const registRes = cmsAPI.regist(this.registData)
           Message({
             message: registRes.Msg,
             type: registRes.IsSuccess ? 'success' : 'error'

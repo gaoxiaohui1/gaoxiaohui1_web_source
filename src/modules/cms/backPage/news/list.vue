@@ -5,15 +5,18 @@
         <el-form-item label="序号">
           <el-input v-model="searchData.ID" placeholder="序号"></el-input>
         </el-form-item>
+        <el-form-item label="类型">
+          <el-select v-model="searchData.type" placeholder="类型" style="width:130px;">
+            <el-option v-for="item in types" :label="item.label" :value="item.value" :key="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="作者">
           <el-input v-model="searchData.author" placeholder="作者"></el-input>
         </el-form-item>
         <el-form-item label="发布人">
-          <el-input v-model="searchData.publishUser" placeholder="发布人"></el-input>
-        </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="searchData.type" placeholder="类型" style="width:130px;">
-            <el-option v-for="item in types" :label="item.label" :value="item.value" :key="item.value">
+          <el-select v-model="searchData.publishUserID" placeholder="发布人" style="width:130px;">
+            <el-option v-for="item in publishUsers" :label="item.label" :value="item.value" :key="item.value">
             </el-option>
           </el-select>
         </el-form-item>
@@ -24,6 +27,9 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click.stop.prevent="getTableData">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <router-link to="/cms/bp/news/add">新增</router-link>
         </el-form-item>
         <table-head-select :selectableFields="selectableFields" @handleTableHeadChange="tableHeadChange"></table-head-select>
       </el-form>
@@ -48,7 +54,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import cmsApi from '../api'
+import cmsAPI from '@/modules/cms/api/newsAPI'
 import tableHeadSelect from '@/components/tableHeadSelect'
 const totalFields = [
   { field: 'ID', label: '序号' },
@@ -57,18 +63,21 @@ const totalFields = [
   { field: 'author', label: '作者' },
   { field: 'publishTime', label: '发布时间' },
   { field: 'publishUser', label: '发布人' },
-  { field: 'readCount', label: '阅读量' }
+  { field: 'readCount', label: '阅读量' },
+  { field: 'newsStatus', label: '状态' }
 ]
 export default {
   name: 'newsList',
   data() {
     return {
-      types: [], // 类型下拉
+      types: [{ value: '', label: '类型' }], // 类型下拉
+      publishUsers: [{ value: -2, label: '发布人' }], // 发布人下拉
       searchData: {
         ID: '', // 编号
-        author: '', // 作者
-        publishUser: '', // 发布人
         type: '', // 类型
+        author: '', // 作者
+        newsStatus: -1, // 状态
+        publishUserID: -2, // 发布人
         startTime: '', // 开始时间
         endTime: '', // 结束时间
         pageIndex: 1,
@@ -86,18 +95,18 @@ export default {
     getTableData() { // 获取列表
       this.loading1 = true
       this.searchData.pageIndex = this.searchData.pageIndex < 1 ? 1 : this.searchData.pageIndex
-      cmsApi.getNewsList(this.searchData).then(response => {
-        this.loading1 = false
-        this.tableData = response.Value.data
-        this.totalCount = response.Value.totalCount
-      }).catch(error => {
-        console.log(error)
+      const listRes = cmsAPI.getNewsList(this.searchData)
+      this.loading1 = false
+      if (listRes.IsSuccess) {
+        this.tableData = listRes.Data.data
+        this.totalCount = listRes.Data.totalCount
+      } else {
         Message({
           type: 'error',
-          message: error.Msg,
+          message: listRes.Msg,
           durarion: 3 * 1000
         })
-      })
+      }
     },
     handleCurrentChange(currentPage) { // 分页跳转
       this.searchData.pageIndex = currentPage
@@ -111,11 +120,33 @@ export default {
     }
   },
   created() {
-    this.types.push({ value: 0, label: '类型' })
-    this.types.push(...cmsApi.getNewsTye())
+    const typeRes = cmsAPI.getDistinctInfos({ type: 'type', label: '类型' })
+    if (typeRes.IsSuccess) {
+      typeRes.Data.forEach(x => {
+        this.types.push({ value: x, label: x })
+      })
+    } else {
+      Message({
+        type: 'error',
+        message: typeRes.Msg,
+        durarion: 3 * 1000
+      })
+    }
+    const puRes = cmsAPI.getDistinctInfos({ type: 'publishUser', label: '发布人' })
+    if (puRes.IsSuccess) {
+      puRes.Data.forEach(x => {
+        this.publishUsers.push({ value: x.ID, label: x.name })
+      })
+    } else {
+      Message({
+        type: 'error',
+        message: puRes.Msg,
+        durarion: 3 * 1000
+      })
+    }
     this.searchData.ID = this.$route.query.ID
     this.searchData.author = this.$route.query.author
-    this.searchData.publishUser = this.$route.query.publishUser
+    this.searchData.publishUserID = this.$route.query.publishUserID
     this.searchData.type = this.$route.query.type
     this.getTableData()
   },

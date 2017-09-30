@@ -1,5 +1,5 @@
 import auth from '@/utils/auth'
-import cmsAPI from '@/modules/cms/backPage/api'
+import cmsAPI from '@/modules/cms/api/userAPI'
 
 const user = {
   state: {
