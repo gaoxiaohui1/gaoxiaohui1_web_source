@@ -31,19 +31,19 @@ export default {
       const totalMatchNews = []
       JSON.parse(idStr).forEach(x => {
         const currentNews = JSON.parse(window.localStorage.getItem('cms_news_' + x.ID))
-        if (searchInfo.ID !== '' && currentNews.ID !== parseInt(searchInfo.ID)) {
+        if (searchInfo.ID !== undefined && searchInfo.ID !== '' && currentNews.ID !== parseInt(searchInfo.ID)) {
           return false
         }
-        if (searchInfo.type !== '' && currentNews.type !== searchInfo.type) {
+        if (searchInfo.type !== undefined && searchInfo.type !== '' && currentNews.type !== searchInfo.type) {
           return false
         }
-        if (searchInfo.author !== '' && currentNews.author !== searchInfo.author) {
+        if (searchInfo.author !== undefined && searchInfo.author !== '' && currentNews.author !== searchInfo.author) {
           return false
         }
-        if (searchInfo.newsStatus !== '' && currentNews.newsStatus !== parseInt(searchInfo.newsStatus)) {
+        if (searchInfo.newsStatus !== undefined && searchInfo.newsStatus !== '' && parseInt(searchInfo.newsStatus) !== -1 && currentNews.newsStatus !== parseInt(searchInfo.newsStatus)) {
           return false
         }
-        if (searchInfo.publishUserID !== '' && currentNews.publishUserID !== parseInt(searchInfo.publishUserID)) {
+        if (searchInfo.publishUserID !== undefined && searchInfo.publishUserID !== '' && parseInt(searchInfo.publishUserID) !== -2 && currentNews.publishUserID !== parseInt(searchInfo.publishUserID)) {
           return false
         }
         totalMatchNews.push(currentNews)
@@ -158,6 +158,58 @@ export default {
     } catch (e) {
       console.log('getNewsDetail_error:', e)
       return { IsSuccess: false, Msg: '获取新闻详情失败', Data: {}}
+    }
+  },
+  /**
+   * 新增阅读量
+   * @param {*} id
+   */
+  addReadCount(id) {
+    try {
+      const key = 'cms_news_' + id
+      const newsStr = window.localStorage.getItem(key)
+      if (newsStr === null || newsStr === '') {
+        return { IsSuccess: false, Msg: '参数错误', Data: {}}
+      } else {
+        const news = JSON.parse(newsStr)
+        news.readCount += 1
+        window.localStorage.setItem(key, JSON.stringify(news))
+        return { IsSuccess: true, Msg: '新增阅读量成功', Data: news }
+      }
+    } catch (e) {
+      console.log('addReadCount_error:', e)
+      return { IsSuccess: false, Msg: '新增阅读量失败', Data: {}}
+    }
+  },
+  /**
+   * 发布、取消发布、删除
+   * @param {*} info
+   */
+  operateNews(info) {
+    try {
+      const key = 'cms_news_' + info.id
+      const newsStr = window.localStorage.getItem(key)
+      if (newsStr === null || newsStr === '') {
+        return { IsSuccess: false, Msg: '参数错误', Data: {}}
+      } else {
+        const news = JSON.parse(newsStr)
+        let des = ''
+        if (info.type === 'publish') {
+          des = '发布'
+          news.newsStatus = 1
+        }
+        if (info.type === 'callBackPublish') {
+          news.newsStatus = 0
+        }
+        if (info.type === 'delete') {
+          news.newsStatus = 9
+        }
+        window.localStorage.setItem(key, JSON.stringify(news))
+        return { IsSuccess: true, Msg: des + '成功', Data: news }
+      }
+    } catch (e) {
+      console.log('addReadCount_error:', e)
+      return { IsSuccess: false, Msg: '操作失败', Data: {}}
     }
   }
 }

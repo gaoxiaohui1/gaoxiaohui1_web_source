@@ -12,7 +12,9 @@
     <div class="content">{{detail.content}}</div>
     <div class="foot">
       <span>作者：{{detail.author}}</span>
+      <br/>
       <span>录入时间：{{detail.insertTime}}</span>
+      <br/>
       <span>修改时间：{{detail.updateTime}}</span>
     </div>
   </div>
@@ -61,14 +63,19 @@ export default {
 </script>
 
 <style scoped>
+.detail {
+  width: 80%;
+  margin-top: 20px
+}
+
 .info {
+  margin-top: 20px;
   line-height: 20px;
   font-size: 6px;
   color: #8c8c8c
 }
 
 .content {
-  width: 80%;
   margin-top: 20px;
   position: relative;
   overflow: hidden;
@@ -77,7 +84,7 @@ export default {
 }
 
 .foot {
-  margin-top: 10px;
+  margin-top: 30px;
   font-size: 16px;
   color: #8c8c8c;
   float: right;
