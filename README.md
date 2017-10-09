@@ -50,7 +50,7 @@ cms网站后台页面（需登录）
 
 ``` bash
 # install dependencies
-npm install
+npm install --registry=https://registry.npm.taobao.org
 
 # serve with hot reload at localhost:8080
 npm run dev
