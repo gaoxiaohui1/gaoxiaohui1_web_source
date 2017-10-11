@@ -1,17 +1,30 @@
 <template>
   <section>
     <ul v-if="isShowList">
-      <li v-for="item in authors" v-bind:key="item.ID">
-        <router-link :to="{path: '/cms/fp/news/list', query: { author: item.author }}"> {{item.author}} </router-link>
+      <li v-for="item in authors" v-bind:key="item.value">
+        <router-link :to="{path: '/cms/fp/news/list', query: { type: item.value }}"> {{item.label}} </router-link>
       </li>
     </ul>
-    <span v-else>
-      暂时没有新闻~
-    </span>
+    <div v-else>
+      <span>
+        暂时没有新闻~
+      </span>
+      <br/>
+      <span>
+        没有账号？
+        <router-link to="/cms/bp/regist">注册账号</router-link>添加并发布新闻~
+      </span>
+      <br/>
+      <span>
+        已有账号，请
+        <router-link to="/cms/bp/login">登陆账号</router-link>添加并发布新闻~
+      </span>
+    </div>
   </section>
 </template>
 <script>
-import cmsApi from '../api'
+import { Message } from 'element-ui'
+import cmsAPI from '@/modules/cms/api/newsAPI'
 export default {
   name: 'authors',
   data() {
@@ -25,9 +38,18 @@ export default {
     }
   },
   created() {
-    cmsApi.getNewsAuthors().then(response => {
-      this.authors = response.Value.data
-    })
+    const res = cmsAPI.getDistinctInfos({ type: 'author', label: '作者' })
+    if (res.IsSuccess) {
+      res.Data.forEach(x => {
+        this.authors.push({ value: x, label: x })
+      })
+    } else {
+      Message({
+        type: 'error',
+        message: res.Msg,
+        durarion: 3 * 1000
+      })
+    }
   }
 }
 </script>

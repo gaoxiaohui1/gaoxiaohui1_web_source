@@ -136,29 +136,14 @@ export default {
     },
     doOperateNews(id, type) { // 操作
       const operateRes = cmsAPI.operateNews({ id: id, type: type })
+      Message({
+        type: operateRes.IsSuccess ? 'success' : 'error',
+        message: operateRes.Msg,
+        durarion: 3 * 1000
+      })
       if (operateRes.IsSuccess) {
         this.getTableData()
-      } else {
-        Message({
-          type: 'error',
-          message: operateRes.Msg,
-          durarion: 3 * 1000
-        })
       }
-    },
-    doCBPublish(id) { // 召回发布
-      Message({
-        type: 'success',
-        message: id + '召回发布成功',
-        durarion: 3 * 1000
-      })
-    },
-    doDelete(id) { // 删除
-      Message({
-        type: 'success',
-        message: id + '删除成功',
-        durarion: 3 * 1000
-      })
     }
   },
   created() {

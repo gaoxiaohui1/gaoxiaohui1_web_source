@@ -197,11 +197,48 @@ export default {
         if (info.type === 'publish') {
           des = '发布'
           news.newsStatus = 1
+          news.publishUserID = store.getters.cmsUser.ID
+          const pu = { ID: store.getters.cmsUser.ID, name: store.getters.cmsUser.userName, count: 1 }
+          const puKey = 'cms_news_publishUser'
+          const puStr = window.localStorage.getItem(puKey)
+          if (puStr === null || puStr === '') {
+            window.localStorage.setItem(puKey, JSON.stringify([pu])) // 保存发布人信息
+          } else {
+            const puInfos = JSON.parse(puStr)
+            if (puInfos.find(x => x.ID === pu.ID) === undefined) {
+              puInfos.push(pu)
+            } else {
+              puInfos.forEach(x => {
+                if (x.ID === pu.ID) {
+                  x.count = x.count + 1
+                }
+              }) // 更新发布人信息
+            }
+            window.localStorage.setItem(puKey, JSON.stringify(puInfos)) // 更新发布人信息
+          }
         }
         if (info.type === 'callBackPublish') {
+          des = '取消发布'
           news.newsStatus = 0
+          news.publishUserID = -1
+          const pu = { ID: store.getters.cmsUser.ID, name: store.getters.cmsUser.userName, count: 1 }
+          const puKey = 'cms_news_publishUser'
+          const puInfos = JSON.parse(window.localStorage.getItem(puKey))
+          const sourcePU = puInfos.find(x => x.ID === pu.ID)
+          if (sourcePU.count === 1) {
+            const newPUInfos = puInfos.filter(x => x.ID !== pu.ID)
+            window.localStorage.setItem(puKey, JSON.stringify(newPUInfos)) // 更新发布人信息
+          } else {
+            puInfos.forEach(x => {
+              if (x.ID === pu.ID) {
+                x.count = x.count - 1
+              }
+            })
+            window.localStorage.setItem(puKey, JSON.stringify(puInfos)) // 更新发布人信息
+          }
         }
         if (info.type === 'delete') {
+          des = '删除'
           news.newsStatus = 9
         }
         window.localStorage.setItem(key, JSON.stringify(news))

@@ -27,7 +27,7 @@ key=cms_news_type value=['财经','体育']
 key=cms_news_author value=['张三','李四']
 
 # newsinfo(publishUser)获取发布人列表
-key=cms_news_publishUser value=[{ID:0,name:'张三'}]
+key=cms_news_publishUser value=[{ID:0,name:'张三',count:1}]
 
 # newsinfo(ID,title)获取标题列表
 key=cms_news_title value=[{ID:0,title:'asd'}]
