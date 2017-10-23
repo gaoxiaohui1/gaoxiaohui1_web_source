@@ -8,7 +8,7 @@
         <el-input v-model="addData.type" placeholder="类型" size="small"></el-input>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <el-input v-model="addData.content" type="textarea" placeholder="内容" :rows="5"></el-input>
+        <vue-editor v-model="addData.content"></vue-editor>
       </el-form-item>
       <el-form-item label="作者" prop="author">
         <el-input v-model="addData.author" placeholder="作者" size="small"></el-input>
@@ -24,6 +24,7 @@
 <script>
 import { Message, MessageBox } from 'element-ui'
 import cmsAPI from '@/modules/cms/api/newsAPI'
+import { VueEditor } from 'vue2-editor'
 export default {
   name: 'add',
   data() {
@@ -45,7 +46,7 @@ export default {
         ],
         content: [
           { required: true, message: '请输入内容', trigger: 'blur' },
-          { min: 1, max: 10000, message: '长度在1~10000个字符', trigger: 'blur' }
+          { min: 1, max: 100000, message: '长度在1~100000个字符', trigger: 'blur' }
         ],
         author: [
           { required: true, message: '请输入作者', trigger: 'blur' },
@@ -91,14 +92,18 @@ export default {
       this.addData.content = ''
       this.addData.author = ''
     }
+  },
+  components: {
+    VueEditor
   }
 }
 </script>
 
 <style scoped>
 .detail {
-  width: 80%;
+  width: 50%;
   margin-top: 20px;
+  margin-left: 25%;
   position: relative;
   overflow: hidden;
   color: #8c8c8c;

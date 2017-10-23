@@ -40,6 +40,7 @@ export default {
     }
   },
   created() {
+    console.log(this.$store.getters.cmsUser)
     this.nickName = this.$store.getters.cmsUser.nickName
   }
 }

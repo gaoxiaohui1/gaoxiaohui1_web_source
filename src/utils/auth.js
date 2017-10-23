@@ -1,14 +1,13 @@
-import Cookies from 'js-cookie'
 const cmsTokenKey = 'cms_token'
 
 export default {
   getCMSToken() {
-    return Cookies.get(cmsTokenKey)
+    return window.sessionStorage.getItem(cmsTokenKey)
   },
   setCMSToken(token) {
-    return Cookies.set(cmsTokenKey, token)
+    return window.sessionStorage.setItem(cmsTokenKey, token)
   },
   removeCMSToken() {
-    return Cookies.remove(cmsTokenKey)
+    return window.sessionStorage.removeItem(cmsTokenKey)
   }
 }

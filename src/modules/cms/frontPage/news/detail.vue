@@ -9,7 +9,7 @@
       <span>发布时间：{{detail.publishTime}} </span>
       <span>阅读量：{{detail.readCount}} </span>
     </div>
-    <div class="content">{{detail.content}}</div>
+    <div class="content" v-html="detail.content"></div>
     <div class="foot">
       <span>作者：{{detail.author}}</span>
       <br/>
